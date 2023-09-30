@@ -30,13 +30,24 @@ services:
             - db
             - app
     db:
-        image: mysql:8
+        image: mysql:5.7
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: perhitungan
             MYSQL_ROOT_PASSWORD: root
             MYSQL_PASSWORD: root
             MYSQL_USER: abel
+        ports:
+            - 3307:3306
+        networks:
+            - mynetwork
+    phpmyadmin:
+        image: phpmyadmin:latest
+        restart: unless-stopped
+        ports:
+            - 9002:80
+        environment:
+            - PMA_ARBITRARY=1
         networks:
             - mynetwork
 

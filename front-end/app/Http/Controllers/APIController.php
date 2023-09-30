@@ -23,13 +23,7 @@ class APIController extends Controller
     {
         $request->validate(
             [
-                'bilangan' => 'required|numeric|min:0|max:1000000000',
-            ],
-            [
-                'bilangan.required' => 'Tidak boleh kosong',
-                'bilangan.numeric' => 'Harus berupa angka',
-                'bilangan.min' => 'Tidak boleh kurang dari 0',
-                'bilangan.max' => 'Tidak boleh lebih dari 10 digit',
+                'bilanganAPI' => 'required|numeric|min:0|max:1000000000',
             ],
         );
 
@@ -38,6 +32,7 @@ class APIController extends Controller
         ]);
         $response = Akar::latest('id')->first();
         $response->update();
+
         return redirect('/akar-kuadrat');
     }
 
@@ -46,15 +41,14 @@ class APIController extends Controller
         $start_time = microtime(true);
 
         $request->validate([
-            'bilangan1' => 'required|numeric|min:0|max:1000000000',
-        ], [
-            'bilangan1.required' => 'Tidak boleh kosong',
-            'bilangan1.numeric' => 'Harus berupa angka',
-            'bilangan1.min' => 'Tidak boleh kurang dari 0',
-            'bilangan1.max' => 'Tidak boleh lebih dari 10 digit',
+            'bilanganPL' => 'required|numeric|min:0|max:1000000000',
         ]);
 
-        DB::select('CALL hitungAkar(?)', array($request->bilangan1));
+        if ($request->bilanganPL < 0) {
+            if ($request->bilanganPL >= 1000000000) {
+                DB::select('CALL hitungAkar(?)', array($request->bilanganPL));
+            }
+        }
         $end_time = microtime(true);
         $execution_time = ($end_time - $start_time) * 1000;
         $response = Akar::latest('id')->first();

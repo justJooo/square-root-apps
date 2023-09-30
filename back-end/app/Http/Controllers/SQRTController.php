@@ -9,6 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SQRTController extends Controller
 {
+    public function getData(): JsonResponse
+    {
+        $data = Akar::orderBy('id', 'desc')->take(5)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil mendapatkan data',
+            'data' => $data,
+        ], Response::HTTP_OK);
+    }
+
     public function API2(Request $request): JsonResponse
     {
         $start_time = microtime(true);
@@ -36,8 +47,10 @@ class SQRTController extends Controller
             'status' => 'success',
             'message' => 'Berhasil mendapatkan hasil akar kuadrat',
             'data' => [
+                'input' => $input,
                 'hasil' => $guess,
                 'waktu' => $execution_time,
+                'jenis' => 'API',
             ],
         ], Response::HTTP_OK);
     }

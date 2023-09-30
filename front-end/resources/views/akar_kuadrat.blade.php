@@ -37,43 +37,140 @@
             margin-top: 5px
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
+
+    <script>
+        const SERVER_URL = 'http://localhost:8080';
+        window.onload = function() {
+            updateTable();
+        }
+
+        function submitFormPL() {
+            const form = document.getElementById('akar-form-pl-sql');
+            const formData = new FormData(form);
+            const number = document.getElementById('bilanganPL').value;
+            console.log(number)
+            if (isNaN(number)) {
+                alert('Input harus berupa angka');
+                return;
+            } else if (number == 0) {
+                alert('Input tidak boleh 0');
+            } else if (number < 0) {
+                alert('Input tidak boleh negatif');
+            } else if (number.length >= 10) {
+                alert('Input tidak boleh lebih dari 10 digit');
+            } else {
+                alert('Input berhasil');
+                updateTable();
+            }
+        }
+
+        function submitForm() {
+            const form = document.getElementById('akar-form');
+            const formData = new FormData(form);
+            const number = document.getElementById('bilanganAPI').value;
+            if (isNaN(number)) {
+                alert('Input harus berupa angka');
+                return;
+            } else if (number == 0) {
+                alert('Input tidak boleh 0');
+            } else if (number < 0) {
+                alert('Input tidak boleh negatif');
+            } else if (number.length >= 10) {
+                alert('Input tidak boleh lebih dari 10 digit');
+            } else {
+                alert('Input berhasil');
+                formData.append('number', number);
+                callAPI('POST', `${SERVER_URL}/api/hitung-akar`, formData, function(response) {
+                    console.log(response);
+                    updateTable();
+                });
+            }
+        }
+
+        function callAPI(method, url, data, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, url);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    callback(xhr.responseText);
+                }
+            };
+            xhr.send(data);
+        }
+
+        function updateTable() {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = '';
+
+            callAPI('GET', `${SERVER_URL}/api/data`, null, function(response) {
+                const data = JSON.parse(response);
+                const result = data.data
+                console.log(result);
+                result.forEach(function(row) {
+                    const tr = document.createElement('tr');
+
+                    const inputTd = document.createElement('td');
+                    inputTd.innerText = row.input;
+                    tr.appendChild(inputTd);
+
+                    const angkaTd = document.createElement('td');
+                    angkaTd.innerText = row.angka;
+                    tr.appendChild(angkaTd);
+
+                    const jenisTd = document.createElement('td');
+                    jenisTd.innerText = row.jenis;
+                    tr.appendChild(jenisTd);
+
+                    const waktuTd = document.createElement('td');
+                    waktuTd.innerText = row.waktu;
+                    tr.appendChild(waktuTd);
+
+                    tableBody.appendChild(tr);
+                });
+            });
+        }
+    </script>
 </head>
 
 <body>
     <div class="container">
-        <div class="row" style="display:flex; flex-direction:row; justify-content:center; align-items: center;">
+        <div class="row" style="display:flex; flex-direction:col; justify-content:center; align-items: center;">
             <h1>Akar Kuadrat Bilangan</h1>
-            <div class="col-md-6">
-                <form action="{{ route('hitung-akar-api') }}" method="POST">
-                    @csrf
-                    <label for="bilangan">Masukan Bilangan:</label><br>
-                    <input id="bilangan" class="form form-control @error('bilangan') is invalid @enderror"
-                        name="bilangan"><br>
-                    @error('bilangan')
-                        <div class="invalid-feedback" style="display:block">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                    <button type="submit" class="btn btn-success">submit API</button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <form action="{{ route('hitung-akar-plsql') }}" method="POST">
-                    @csrf
-                    <label for="bilangan1">Masukan Bilangan:</label><br>
-                    <input id="bilangan1" class="form form-control @error('bilangan1') is invalid @enderror"
-                        name="bilangan1"><br>
-                    @error('bilangan1')
-                        <div class="invalid-feedback" style="display:block">
-                            {{ $message }}
-                        </div>
-                    @enderror
-
-                    <button type="submit" class="btn btn-primary">submit PLSQL</button>
-                </form>
+            <div class="col" style="display:flex; flex-direction:col; justify-content:center; align-items: center;">
+                <div class="col-md-6">
+                    <form id="akar-form">
+                        @csrf
+                        <label for="bilanganAPI">Masukan Bilangan:</label><br>
+                        <input id="bilanganAPI" class="form form-control @error('bilanganAPI') is invalid @enderror"
+                            name="bilanganAPI"><br>
+                        {{-- @error('bilanganAPI')
+                            <div class="invalid-feedback" style="display:block">
+                                {{ $message }}
+                            </div>
+                        @enderror --}}
+                        <button type="button" class="btn btn-success" onclick="submitForm()">submit API</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <form id='akar-form-pl-sql' action="{{ route('hitung-akar-plsql') }}" method="POST">
+                        @csrf
+                        <label for="bilanganPL">Masukan Bilangan:</label><br>
+                        <input id="bilanganPL" class="form form-control @error('bilanganPL') is invalid @enderror"
+                            name="bilanganPL"><br>
+                        {{-- @error('bilanganPL')
+                            <div class="invalid-feedback" style="display:block">
+                                {{ $message }}
+                            </div>
+                        @enderror --}}
+                        <button type="submit" class="btn btn-primary" onclick="submitFormPL()">submit PLSQL</button>
+                    </form>
+                </div>
             </div>
         </div>
-
         <table class="table">
             <thead class="table table-primary">
                 <tr>
@@ -83,32 +180,15 @@
                     <th scope="col">Waktu</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach ($response as $res)
-                    <tr>
-                        <th scope="row">{{ $res->input }}</th>
-                        <td>
-                            {{ sprintf('%.2f', $res->angka) }}
-                            @if (floor($res->angka))
-                                @php intval($res->angka) @endphp
-                            @else
-                                @php $res->angka @endphp
-                            @endif
-                        </td>
-                        <td>{{ $res->jenis }}</td>
-                        <td>
-                            @php $data = sprintf($res->waktu) @endphp
-                            {{ number_format($data, 2) }}
-                        </td>
-                    </tr>
-                @endforeach
+            <tbody id="table-body">
+            </tbody>
         </table>
     </div>
+    {{-- <script>
+        updateTable()
+    </script> --}}
 
     </tbody>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
 </body>
 
 </html>

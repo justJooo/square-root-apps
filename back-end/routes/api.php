@@ -19,4 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/hitung-akar',[SQRTController::class,'API2'])->name('hitung-akar');
+Route::post('/hitung-akar', [SQRTController::class, 'API2'])->name('hitung-akar');
+
+Route::get('/data', [SQRTController::class, 'getData'])->name('get-data');

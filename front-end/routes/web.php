@@ -21,10 +21,10 @@ Route::get('/', function () {
 // Route::get('/akar-kuadrat', function () {
 //     return view('akar_kuadrat');
 // });
-Route::get('/akar-kuadrat',[APIController::class,'tampil']);
+Route::get('/akar-kuadrat', [APIController::class, 'tampil']);
 
-//backend api 
-Route::post('/hitung/akar/api',[APIController::class,'postApi'])->name('hitung-akar-api');
+//backend api
+Route::post('/hitung/akar/api', [APIController::class, 'postApi'])->name('hitung-akar-api');
 
 //backend plsql
-Route::post('/hitung/akar/plsql',[APIController::class,'postPLSQL'])->name('hitung-akar-plsql');
+Route::post('/hitung/akar/plsql', [APIController::class, 'postPLSQL'])->name('hitung-akar-plsql');

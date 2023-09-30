@@ -3,7 +3,7 @@ services:
     app:
         build:
             args:
-                user: maruan
+                user: ppl-matkul
                 uid: 1000
             context: ./
             dockerfile: Dockerfile
@@ -14,23 +14,28 @@ services:
             - ./:/var/www
         networks:
             - mynetwork
+        depends_on:
+            - db
     nginx:
         image: nginx:alpine
         restart: unless-stopped
         ports:
-            - 8000:80
+            - 8109:80
         volumes:
             - ./:/var/www
             - ./nginx/conf.d:/etc/nginx/conf.d/
         networks:
             - mynetwork
+        depends_on:
+            - db
+            - app
     db:
         image: mysql:8
         restart: unless-stopped
         environment:
-            MYSQL_DATABASE: rootpassword
-            MYSQL_ROOT_PASSWORD: rootpassword
-            MYSQL_PASSWORD: adminpassword
+            MYSQL_DATABASE: perhitungan
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_PASSWORD: root
             MYSQL_USER: abel
         networks:
             - mynetwork

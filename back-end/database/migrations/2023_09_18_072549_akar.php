@@ -15,7 +15,7 @@ class Akar extends Migration
     {
         Schema::create('akar', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('input');
+            $table->decimal('input');
             $table->decimal('angka', 10, 2, true);
             $table->string('waktu');
             $table->string('jenis');

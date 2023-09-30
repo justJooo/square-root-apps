@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class APIController extends Controller
 {
-    //
     public function tampil()
     {
-
         $response = Akar::latest('id')->take(5)->get(); // Mengambil semua data dari tabel items
 
         return view('akar_kuadrat', compact('response'));
@@ -44,11 +42,13 @@ class APIController extends Controller
             'bilanganPL' => 'required|numeric|min:0|max:1000000000',
         ]);
 
-        if ($request->bilanganPL < 0) {
+        if ($request->bilanganPL > 0) {
+            DB::select('CALL hitungAkar(?)', array($request->bilanganPL));
             if ($request->bilanganPL >= 1000000000) {
-                DB::select('CALL hitungAkar(?)', array($request->bilanganPL));
+                return redirect('/akar-kuadrat');
             }
         }
+
         $end_time = microtime(true);
         $execution_time = ($end_time - $start_time) * 1000;
         $response = Akar::latest('id')->first();

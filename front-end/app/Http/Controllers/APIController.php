@@ -21,7 +21,6 @@ class APIController extends Controller
 
     public function postAPI(Request $request)
     {
-        $start_time = microtime(true);
         $request->validate(
             [
                 'bilangan' => 'required|numeric|min:0',
@@ -37,16 +36,8 @@ class APIController extends Controller
         Http::post('http://127.0.0.1:8080/api/hitung-akar', [
             'number' => $request->bilangan,
         ]);
-
-        $end_time = microtime(true); // Selesai mengukur waktu proses
-        $execution_time = ($end_time - $start_time);
         $response = Akar::latest('id')->first();
-
-        $response->waktu = $execution_time;
-
         $response->update();
-
-
         return redirect('/akar-kuadrat');
     }
 
@@ -65,7 +56,7 @@ class APIController extends Controller
 
         DB::select('CALL hitungAkar(?)', array($request->bilangan1));
         $end_time = microtime(true);
-        $execution_time = ($end_time - $start_time);
+        $execution_time = ($end_time - $start_time) * 1000;
         $response = Akar::latest('id')->first();
 
         $response->waktu = $execution_time;

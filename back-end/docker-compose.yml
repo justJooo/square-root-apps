@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+    app:
+        build:
+            args:
+                user: maruan
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: laravel-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        networks:
+            - mynetwork
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www
+            - ./nginx/conf.d:/etc/nginx/conf.d/
+        networks:
+            - mynetwork
+    db:
+        image: mysql:8
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: rootpassword
+            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_PASSWORD: adminpassword
+            MYSQL_USER: abel
+        networks:
+            - mynetwork
+
+networks:
+    mynetwork:
+        driver: bridge

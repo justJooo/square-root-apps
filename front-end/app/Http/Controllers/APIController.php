@@ -23,7 +23,7 @@ class APIController extends Controller
     {
         $request->validate(
             [
-                'bilangan' => 'required|numeric|min:0',
+                'bilangan' => 'required|numeric|min:0|max:1000000000',
             ],
             [
                 'bilangan.required' => 'Tidak boleh kosong',

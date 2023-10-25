@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/', [APIController::class, 'tampil']);
+
 Route::get('/', function () {
     return view('welcome');
 });
-
-// Route::get('/akar-kuadrat', function () {
-//     return view('akar_kuadrat');
-// });
 Route::get('/akar-kuadrat', [APIController::class, 'tampil']);
 
 //backend api
@@ -28,3 +26,5 @@ Route::post('/hitung/akar/api', [APIController::class, 'postApi'])->name('hitung
 
 //backend plsql
 Route::post('/hitung/akar/plsql', [APIController::class, 'postPLSQL'])->name('hitung-akar-plsql');
+
+https://square-apps-frontend.fly.dev/hitung/akar/plsql

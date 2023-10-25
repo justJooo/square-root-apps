@@ -25,7 +25,7 @@ class APIController extends Controller
             ],
         );
 
-        Http::post('http://127.0.0.1:8080/api/hitung-akar', [
+        Http::post('https://square-apps-backend.fly.dev/api/hitung-akar', [
             'number' => $request->bilangan,
         ]);
         $response = Akar::latest('id')->first();
@@ -43,7 +43,7 @@ class APIController extends Controller
         ]);
 
         if ($request->bilanganPL > 0) {
-            DB::select('CALL hitungAkar(?)', array($request->bilanganPL));
+            DB::select('CALL hitung_akar(?)', array($request->bilanganPL));
             if ($request->bilanganPL >= 1000000000) {
                 return redirect('/akar-kuadrat');
             }

@@ -43,7 +43,7 @@
     </script>
 
     <script>
-        const SERVER_URL = 'http://localhost:8080';
+        const SERVER_URL = 'https://square-apps-backend.fly.dev';
         window.onload = function() {
             updateTable();
         }
@@ -63,7 +63,6 @@
             } else if (number.length >= 10) {
                 alert('Input tidak boleh lebih dari 10 digit');
             } else {
-                alert('Input berhasil');
                 updateTable();
             }
         }
@@ -82,7 +81,6 @@
             } else if (number.length >= 10) {
                 alert('Input tidak boleh lebih dari 10 digit');
             } else {
-                alert('Input berhasil');
                 formData.append('number', number);
                 callAPI('POST', `${SERVER_URL}/api/hitung-akar`, formData, function(response) {
                     console.log(response);
